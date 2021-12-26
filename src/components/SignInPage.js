@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField';
 
 import { app } from '../firebase'
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 
 import { useDispatch } from 'react-redux'
 import { setLoggedIn } from '../features/user/isLoggedSlice'
@@ -16,25 +17,25 @@ import { setUserInfo } from '../features/user/userInfoSlice'
 import { useNavigate } from "react-router-dom";
 
 import { validateEmail } from './../utils/validateEmail';
+import { fetchInfoAboutUser } from '../utils/fetchInfoAboutUser';
 
 const SignInPage = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
+    const db = getFirestore(app);
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
     const dispatch = useDispatch()
     let navigate = useNavigate();
 
-
-
     return (
         <div>
             <Container maxWidth="xl" sx={{ textAlign: 'center' }}>
                 <Typography
                     variant="h2"
-                    sx={{ mx: "auto", my: 2 }}
+                    sx={{ mx: "auto", py: 2 }}
                 >
                     Sign in
                 </Typography>
@@ -53,10 +54,11 @@ const SignInPage = () => {
                                 // Signed in 
                                 const user = userCredential.user;
                                 // ...
-
-                                dispatch(setLoggedIn())
-                                dispatch(setUserInfo(user))
-                                navigate('/')
+                                fetchInfoAboutUser(user.uid).then((userInfo) => {
+                                    dispatch(setLoggedIn())
+                                    dispatch(setUserInfo(userInfo))
+                                    navigate('/')
+                                })
                             })
                             .catch((error) => {
                                 const errorCode = error.code;
@@ -68,15 +70,33 @@ const SignInPage = () => {
                 <Button variant="contained" color="success" sx={{ my: 1, display: "block", mx: "auto" }} onClick={() => {
                     signInWithPopup(auth, provider)
                         .then((result) => {
-                            // This gives you a Google Access Token. You can use it to access the Google API.
                             const credential = GoogleAuthProvider.credentialFromResult(result);
                             const token = credential.accessToken;
-                            // The signed-in user info.
                             const user = result.user;
+                            const isNewUser = user.metadata.creationTime === user.metadata.lastSignInTime
 
-                            dispatch(setLoggedIn())
-                            dispatch(setUserInfo(user))
-                            navigate('/')
+                            let createdUser = {}
+
+                            if (isNewUser) {
+                                createdUser = {
+                                    id: user.uid,
+                                    email: user.email,
+                                    name: user.displayName,
+                                    photoURL: user.photoURL,
+                                    friends: [],
+                                }
+                                // ...
+                                setDoc(doc(db, "users", user.uid), createdUser);
+                                dispatch(setLoggedIn())
+                                dispatch(setUserInfo(createdUser))
+                                navigate('/')
+                            } else {
+                                fetchInfoAboutUser(user.uid).then((userInfo) => {
+                                    dispatch(setLoggedIn())
+                                    dispatch(setUserInfo(userInfo))
+                                    navigate('/')
+                                })
+                            }
                             // ...
                         }).catch((error) => {
                             // Handle Errors here.

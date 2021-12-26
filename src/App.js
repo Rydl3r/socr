@@ -1,5 +1,5 @@
 import {
-  HashRouter as Router,
+  BrowserRouter as Router,
   Routes,
   Route
 } from "react-router-dom";
@@ -10,38 +10,27 @@ import HeroPage from './components/HeroPage';
 import SignInPage from './components/SignInPage';
 import SignUpPage from './components/SignUpPage';
 
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-import { useSelector } from 'react-redux'
+import { store } from './store'
+import { Provider } from 'react-redux'
+import ProfilePage from './components/ProfilePage';
 
 function App() {
-  const themeMode = useSelector((state) => state.theme.value)
-  const darkTheme = createTheme({
-    palette: {
-      mode: 'dark',
-    },
-  });
-  const lightTheme = createTheme({
-    palette: {
-      mode: 'light',
-    },
-  });
 
 
   return (
-
-    <Router>
-      <ThemeProvider theme={themeMode === "light" ? lightTheme : darkTheme}>
+    <Provider store={store}>
+      <Router>
         <div className="App">
           <Navbar />
           <Routes >
             <Route path="/" element={<HeroPage />} />
             <Route path="/signin" element={<SignInPage />} />
             <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/profile/:id" element={<ProfilePage />} />
           </Routes >
         </div>
-      </ThemeProvider>
-    </Router>
+      </Router>
+    </Provider>
   );
 }
 

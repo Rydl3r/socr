@@ -19,12 +19,11 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux'
 import { setLoggedOut } from '../features/user/isLoggedSlice'
 import { setUserInfo } from '../features/user/userInfoSlice'
-import { changeTheme } from '../features/theme/themeSlice'
 
 import { app } from '../firebase'
 import { getAuth, signOut } from "firebase/auth";
 
-import NoPersonImage from '../assets/no_person.jpg'
+import NoPersonImage from '../assets/no_person.svg'
 
 
 const Navbar = () => {
@@ -39,11 +38,6 @@ const Navbar = () => {
 
     const settings = [
         {
-            name: "Change theme",
-            action: function () {
-                dispatch(changeTheme())
-            }
-        }, {
             name: "Logout",
             action: function () {
                 const auth = getAuth(app);
@@ -60,11 +54,6 @@ const Navbar = () => {
 
     const loggedOutSettings = [
         {
-            name: "Change theme",
-            action: function () {
-                dispatch(changeTheme())
-            }
-        }, {
             name: "Login",
             action: function () { navigate('/signin') }
         },
@@ -171,7 +160,7 @@ const Navbar = () => {
                     {isLogged ? <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="Remy Sharp" src={userInfo.photoURL ? userInfo.photoURL : NoPersonImage} />
+                                <Avatar alt={userInfo.name} src={userInfo.photoURL ? userInfo.photoURL : NoPersonImage} />
                             </IconButton>
                         </Tooltip>
                         <Menu
