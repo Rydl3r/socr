@@ -1,11 +1,15 @@
 import { Avatar, Box, Button, Container, Typography } from '@mui/material';
-import { useState, useEffect } from 'react'
+import NoPersonImage from '../assets/no_person.svg'
 
+import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from "react-router-dom";
 
-import { fetchInfoAboutUser } from './../utils/fetchInfoAboutUser';
+import { useSelector, useDispatch } from 'react-redux'
+import { setUserInfo, deleteSentRequest, addSentRequest, deleteFriend } from '../features/user/userInfoSlice'
 
-import NoPersonImage from '../assets/no_person.svg'
+import { doc, updateDoc, getFirestore, arrayUnion, arrayRemove } from "firebase/firestore";
+import { app } from '../firebase'
+import { fetchInfoAboutUser } from './../utils/fetchInfoAboutUser';
 
 const ProfilePage = () => {
     const [userInfo, setUserInfo] = useState({})
@@ -13,12 +17,68 @@ const ProfilePage = () => {
 
     let { id } = useParams();
     let navigate = useNavigate();
+    let dispatch = useDispatch()
+
+    const db = getFirestore(app);
+
+    const currentUserInfo = useSelector((state) => state.userInfo.value)
+
+
+
+    const sendRequest = async () => {
+        if (currentUserInfo && currentUserInfo.id && currentUserInfo.id.length > 0) {
+            const sendToDocRef = doc(db, "users", id);
+            await updateDoc(sendToDocRef, {
+                requests: arrayUnion(currentUserInfo.id)
+            });
+            const sendFromDocRef = doc(db, "users", currentUserInfo.id);
+            await updateDoc(sendFromDocRef, {
+                sentRequests: arrayUnion(id)
+            });
+            console.log("sent request")
+            dispatch(addSentRequest(id))
+        } else {
+            alert('Please, login!')
+        }
+    }
+
+    const undoRequest = async () => {
+        if (currentUserInfo && currentUserInfo.id && currentUserInfo.id.length > 0) {
+            const sendToDocRef = doc(db, "users", id);
+            await updateDoc(sendToDocRef, {
+                requests: arrayRemove(currentUserInfo.id)
+            });
+            const sendFromDocRef = doc(db, "users", currentUserInfo.id);
+            await updateDoc(sendFromDocRef, {
+                sentRequests: arrayRemove(id)
+            });
+            console.log("deletedRequest", currentUserInfo)
+            dispatch(deleteSentRequest(id))
+        } else {
+            alert('Please, login!')
+        }
+    }
+
+    const unfriend = async () => {
+        const unfriended = doc(db, "users", id);
+        await updateDoc(unfriended, {
+            friends: arrayRemove(currentUserInfo.id)
+        });
+        const currentUserRef = doc(db, "users", currentUserInfo.id);
+        await updateDoc(currentUserRef, {
+            friends: arrayRemove(id)
+        });
+        dispatch(deleteFriend(id))
+        let newArr = friends.filter((friend) => friend.id !== currentUserInfo.id)
+        setFriends(newArr)
+    }
 
     const getFriends = async () => {
         const user = await fetchInfoAboutUser(id)
         setUserInfo(user)
+        console.log(user)
         let newArr = []
-        if (user.friends.length !== 0) {
+        if (user && user.friends && user.friends.length !== 0) {
             for (let friendId of user.friends) {
                 const friend = await fetchInfoAboutUser(friendId)
                 newArr.push(friend)
@@ -43,7 +103,7 @@ const ProfilePage = () => {
                         {friends && friends.length > 0 ? friends.map((friend) => {
                             return (
                                 <Box key={friend.id}>
-                                    <Link to={'/profile/' + friend.id}>
+                                    <Link to={friend.id !== currentUserInfo.id ? '/profile/' + friend.id : '/myprofile'}>
                                         <Avatar alt={friend.name} src={friend.photoURL ? friend.photoURL : NoPersonImage} sx={{ width: 64, height: 64, mx: 1 }}></Avatar>
                                     </Link>
                                 </Box>
@@ -51,17 +111,29 @@ const ProfilePage = () => {
                         }) : ""}
                     </Box>
                     <Box sx={{ display: "flex", justifyContent: "center" }}>
-                        <Typography variant="h6" sx={{ p: 2 }}>This user has {userInfo.friends.length} {userInfo.friends.length !== 1 ? "friends" : 'friend'}</Typography>
-                        <Link to="/">
-                            <Button variant="contained" sx={{ m: 2 }}>Send Request</Button>
-                        </Link>
+                        <Typography variant="h6" sx={{ p: 2 }}>This user has {friends.length} {friends.length !== 1 ? "friends" : 'friend'}</Typography>
+                        {currentUserInfo && currentUserInfo.friends && currentUserInfo.friends.includes(id)
+                            ? <Button onClick={() => unfriend()} variant="outlined" sx={{ m: 2 }}>Unfriend</Button>
+                            :
+                            <Box>
+                                {
+                                    currentUserInfo && currentUserInfo.sentRequests && currentUserInfo.sentRequests.includes(id)
+                                        ? <Button onClick={() => undoRequest()} variant="outlined" sx={{ m: 2 }}>Undo request</Button>
+                                        : <Button onClick={() => sendRequest()} variant="contained" sx={{ m: 2 }}>Send Request</Button>
+
+                                }
+                            </Box>
+                        }
+
                     </Box>
                 </Container>
                 :
-                ""
+                <Box sx={{ textAlign: "center" }}>
+                    <Typography variant="h4" sx={{ p: 2 }}>No User has been found by this id.<br /> Are you sure you're on the right page?</Typography>
+                </Box>
             }
 
-        </div>
+        </div >
     )
 }
 

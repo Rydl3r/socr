@@ -38,6 +38,18 @@ const Navbar = () => {
 
     const settings = [
         {
+            name: "My Profile",
+            action: function () {
+                navigate('/myprofile')
+            }
+        },
+        {
+            name: "My Friend Requests",
+            action: function () {
+                navigate('/myrequests')
+            }
+        },
+        {
             name: "Logout",
             action: function () {
                 const auth = getAuth(app);
@@ -50,7 +62,8 @@ const Navbar = () => {
                     // An error happened.
                 });
             }
-        }];
+        },
+    ];
 
     const loggedOutSettings = [
         {
@@ -95,7 +108,7 @@ const Navbar = () => {
                         component="div"
                         sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
                     >
-                        SocR
+                        <Link to="/">SocR</Link>
                     </Typography>
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -142,7 +155,9 @@ const Navbar = () => {
                         component="div"
                         sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
                     >
-                        SocR
+                        <Link to="/">
+                            SocR
+                        </Link>
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {pages.map((page) => (
@@ -158,7 +173,7 @@ const Navbar = () => {
                         ))}
                     </Box>
                     {isLogged ? <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Open settings">
+                        <Tooltip title="User">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                 <Avatar alt={userInfo.name} src={userInfo.photoURL ? userInfo.photoURL : NoPersonImage} />
                             </IconButton>
@@ -187,7 +202,7 @@ const Navbar = () => {
                         </Menu>
                     </Box>
                         : <Box sx={{ flexGrow: 0 }}>
-                            <Tooltip title="Open settings">
+                            <Tooltip title="User">
                                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                     <Avatar alt="User" src="/static/images/avatar/2.jpg" />
                                 </IconButton>

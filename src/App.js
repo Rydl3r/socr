@@ -9,14 +9,16 @@ import Navbar from './components/Navbar'
 import HeroPage from './components/HeroPage';
 import SignInPage from './components/SignInPage';
 import SignUpPage from './components/SignUpPage';
+import ProfilePage from './components/ProfilePage';
+import FriendsRequestPage from './components/FriendsRequestPage';
 
 import { store } from './store'
 import { Provider } from 'react-redux'
-import ProfilePage from './components/ProfilePage';
+import MyProfilePage from './components/MyProfilePage';
+import MyRequestsPage from './components/MyRequestsPage';
+
 
 function App() {
-
-
   return (
     <Provider store={store}>
       <Router>
@@ -27,6 +29,9 @@ function App() {
             <Route path="/signin" element={<SignInPage />} />
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/profile/:id" element={<ProfilePage />} />
+            <Route path="/requests" element={<FriendsRequestPage />} />
+            <Route path="/myprofile" element={<MyProfilePage />} />
+            <Route path="/myrequests" element={<MyRequestsPage />} />
           </Routes >
         </div>
       </Router>

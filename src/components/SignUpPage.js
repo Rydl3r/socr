@@ -74,6 +74,8 @@ const SignUpPage = () => {
                                     name: name + " " + surname,
                                     photoURL: null,
                                     friends: [],
+                                    requests: [],
+                                    sentRequests: [],
                                 }
                                 // ...
                                 setDoc(doc(db, "users", user.uid), createdUser);

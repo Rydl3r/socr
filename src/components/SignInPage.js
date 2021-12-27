@@ -84,6 +84,8 @@ const SignInPage = () => {
                                     name: user.displayName,
                                     photoURL: user.photoURL,
                                     friends: [],
+                                    requests: [],
+                                    sentRequests: [],
                                 }
                                 // ...
                                 setDoc(doc(db, "users", user.uid), createdUser);
