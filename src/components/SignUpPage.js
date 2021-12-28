@@ -72,6 +72,7 @@ const SignUpPage = () => {
                                     id: user.uid,
                                     email: email,
                                     name: name + " " + surname,
+                                    description: "I am super secret about myself, that's the only description you get for now)",
                                     photoURL: null,
                                     friends: [],
                                     requests: [],

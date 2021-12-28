@@ -21,6 +21,9 @@ export const userInfoSlice = createSlice({
         updateName: (state, action) => {
             state.value.name = action.payload
         },
+        updateDescription: (state, action) => {
+            state.value.description = action.payload
+        },
         addFriend: (state, action) => {
             state.value.friends.push(action.payload)
         },
@@ -40,6 +43,6 @@ export const userInfoSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { setUserInfo, updatePhoto, updateName, addFriend, deleteFriend, addSentRequest, deleteSentRequest, deleteRequest } = userInfoSlice.actions
+export const { setUserInfo, updatePhoto, updateName, updateDescription, addFriend, deleteFriend, addSentRequest, deleteSentRequest, deleteRequest } = userInfoSlice.actions
 
 export default userInfoSlice.reducer

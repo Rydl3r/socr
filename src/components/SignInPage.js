@@ -82,6 +82,7 @@ const SignInPage = () => {
                                     id: user.uid,
                                     email: user.email,
                                     name: user.displayName,
+                                    description: "I am super secret about myself, that's the only description you get for now)",
                                     photoURL: user.photoURL,
                                     friends: [],
                                     requests: [],

@@ -99,6 +99,7 @@ const ProfilePage = () => {
                 <Container sx={{ textAlign: "center", py: 2 }}>
                     <Avatar alt={userInfo.name} src={userInfo.photoURL ? userInfo.photoURL : NoPersonImage} sx={{ width: 128, height: 128, mx: "auto" }} />
                     <Typography variant="h4" sx={{ py: 2 }}>{userInfo.name}</Typography>
+                    <Typography variant="h5" sx={{ py: 2 }}>{userInfo.description}</Typography>
                     <Box sx={{ display: "flex", justifyContent: "center" }}>
                         {friends && friends.length > 0 ? friends.map((friend) => {
                             return (

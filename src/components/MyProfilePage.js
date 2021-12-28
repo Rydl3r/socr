@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux'
-import { updateName, updatePhoto } from '../features/user/userInfoSlice'
+import { updateName, updatePhoto, updateDescription } from '../features/user/userInfoSlice'
 
 
 import { doc, updateDoc, getFirestore, arrayUnion, arrayRemove } from "firebase/firestore";
@@ -20,6 +20,7 @@ const MyProfilePage = () => {
     const [editingMode, setEditingMode] = useState(false)
     const [editingPhoto, setEditingPhoto] = useState("")
     const [editingName, setEditingName] = useState("")
+    const [editingDescription, setEditingDescription] = useState("")
 
 
     const currentUserInfo = useSelector((state) => state.userInfo.value)
@@ -53,17 +54,23 @@ const MyProfilePage = () => {
             dispatch(updatePhoto(editingPhoto))
             updatedUser.photoURL = editingPhoto
         }
+        if (editingDescription !== "") {
+            dispatch(updateDescription(editingDescription))
+            updatedUser.description = editingDescription
+        }
         setUserInfo(updatedUser)
 
         const currentRef = doc(db, "users", userInfo.id);
         await updateDoc(currentRef, {
             name: userInfo.name,
-            photoURL: userInfo.photoURL
+            photoURL: userInfo.photoURL,
+            description: userInfo.description,
         });
 
         setEditingMode(false)
         setEditingName("")
         setEditingPhoto("")
+        setEditingDescription("")
         console.log(currentUserInfo, "shit from redux")
     }
 
@@ -82,9 +89,12 @@ const MyProfilePage = () => {
                         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
                             <TextField value={editingPhoto} onChange={(e) => setEditingPhoto(e.target.value)} label="New image url" type="text" variant="outlined" sx={{ my: 1, mx: "auto" }}></TextField>
                             <TextField value={editingName} onChange={(e) => setEditingName(e.target.value)} label="New name" type="text" variant="outlined" sx={{ my: 1, mx: "auto" }}></TextField>
+                            <TextField value={editingDescription} onChange={(e) => setEditingDescription(e.target.value)} label="New description" type="text" variant="outlined" sx={{ my: 1, mx: "auto", width: 512 }}></TextField>
                             <Button variant="contained" color="primary" onClick={() => saveEditingChanges()}>Save changes</Button>
                         </Box>
-                        : <Box> <Typography variant="h4" sx={{ py: 2 }}>{userInfo.name}</Typography>
+                        : <Box>
+                            <Typography variant="h4" sx={{ py: 2 }}>{userInfo.name}</Typography>
+                            <Typography variant="h5" sx={{ py: 2 }}>{userInfo.description}</Typography>
                             <Box sx={{ display: "flex", justifyContent: "center" }}>
                                 {friends && friends.length > 0 ? friends.map((friend) => {
                                     return (
@@ -110,7 +120,7 @@ const MyProfilePage = () => {
                 </Box>
             }
 
-        </div>
+        </div >
     )
 }
 
