@@ -173,7 +173,10 @@ const Post = (props) => {
                                         <Typography>{comment.publishedAt}</Typography>
                                     </Box>
                                     <Typography>{comment.content}</Typography>
-                                    <Button variant="outlined" color="error" sx={{ display: "flex", ml: "auto", my: 2 }} onClick={() => deleteComment(comment)}><CancelIcon sx={{ pr: 1 }}></CancelIcon>Delete Comment</Button>
+                                    {comment.id === currentUserInfo
+                                        ? <Button variant="outlined" color="error" sx={{ display: "flex", ml: "auto", my: 2 }} onClick={() => deleteComment(comment)}><CancelIcon sx={{ pr: 1 }}></CancelIcon>Delete Comment</Button>
+                                        : ""}
+
                                 </Card>
                             )
                         })
