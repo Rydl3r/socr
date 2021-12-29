@@ -38,6 +38,12 @@ const Navbar = () => {
 
     const settings = [
         {
+            name: "Add Post",
+            action: function () {
+                navigate('/addpost')
+            }
+        },
+        {
             name: "My Profile",
             action: function () {
                 navigate('/myprofile')

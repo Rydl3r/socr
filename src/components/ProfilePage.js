@@ -1,11 +1,13 @@
 import { Avatar, Box, Button, Container, Typography } from '@mui/material';
+import CancelIcon from '@mui/icons-material/Cancel';
+import SendIcon from '@mui/icons-material/Send';
 import NoPersonImage from '../assets/no_person.svg'
 
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setUserInfo, deleteSentRequest, addSentRequest, deleteFriend } from '../features/user/userInfoSlice'
+import { deleteSentRequest, addSentRequest, deleteFriend } from '../features/user/userInfoSlice'
 
 import { doc, updateDoc, getFirestore, arrayUnion, arrayRemove } from "firebase/firestore";
 import { app } from '../firebase'
@@ -16,7 +18,6 @@ const ProfilePage = () => {
     const [friends, setFriends] = useState([])
 
     let { id } = useParams();
-    let navigate = useNavigate();
     let dispatch = useDispatch()
 
     const db = getFirestore(app);
@@ -35,7 +36,6 @@ const ProfilePage = () => {
             await updateDoc(sendFromDocRef, {
                 sentRequests: arrayUnion(id)
             });
-            console.log("sent request")
             dispatch(addSentRequest(id))
         } else {
             alert('Please, login!')
@@ -52,7 +52,6 @@ const ProfilePage = () => {
             await updateDoc(sendFromDocRef, {
                 sentRequests: arrayRemove(id)
             });
-            console.log("deletedRequest", currentUserInfo)
             dispatch(deleteSentRequest(id))
         } else {
             alert('Please, login!')
@@ -73,22 +72,22 @@ const ProfilePage = () => {
         setFriends(newArr)
     }
 
-    const getFriends = async () => {
-        const user = await fetchInfoAboutUser(id)
-        setUserInfo(user)
-        console.log(user)
-        let newArr = []
-        if (user && user.friends && user.friends.length !== 0) {
-            for (let friendId of user.friends) {
-                const friend = await fetchInfoAboutUser(friendId)
-                newArr.push(friend)
-            }
-            setFriends(newArr)
-        }
 
-    }
 
     useEffect(() => {
+        const getFriends = async () => {
+            const user = await fetchInfoAboutUser(id)
+            setUserInfo(user)
+            let newArr = []
+            if (user && user.friends && user.friends.length !== 0) {
+                for (let friendId of user.friends) {
+                    const friend = await fetchInfoAboutUser(friendId)
+                    newArr.push(friend)
+                }
+                setFriends(newArr)
+            }
+
+        }
         getFriends()
     }, [id])
 
@@ -114,13 +113,13 @@ const ProfilePage = () => {
                     <Box sx={{ display: "flex", justifyContent: "center" }}>
                         <Typography variant="h6" sx={{ p: 2 }}>This user has {friends.length} {friends.length !== 1 ? "friends" : 'friend'}</Typography>
                         {currentUserInfo && currentUserInfo.friends && currentUserInfo.friends.includes(id)
-                            ? <Button onClick={() => unfriend()} variant="outlined" sx={{ m: 2 }}>Unfriend</Button>
+                            ? <Button color="info" onClick={() => unfriend()} variant="outlined" sx={{ m: 2, display: "flex" }}><CancelIcon sx={{ pr: 1 }}></CancelIcon>Unfriend</Button>
                             :
                             <Box>
                                 {
                                     currentUserInfo && currentUserInfo.sentRequests && currentUserInfo.sentRequests.includes(id)
-                                        ? <Button onClick={() => undoRequest()} variant="outlined" sx={{ m: 2 }}>Undo request</Button>
-                                        : <Button onClick={() => sendRequest()} variant="contained" sx={{ m: 2 }}>Send Request</Button>
+                                        ? <Button color="error" onClick={() => undoRequest()} variant="contained" sx={{ m: 2, display: "flex" }}><CancelIcon sx={{ pr: 1 }}></CancelIcon>Undo request</Button>
+                                        : <Button color="success" onClick={() => sendRequest()} variant="contained" sx={{ m: 2, display: "flex" }}><SendIcon sx={{ pr: 1 }}></SendIcon>Send Request</Button>
 
                                 }
                             </Box>

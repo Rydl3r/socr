@@ -1,4 +1,6 @@
-import { Avatar, Box, Button, Container, Typography, Card } from '@mui/material';
+import { Avatar, Box, Button, Typography, Card } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
+import CancelIcon from '@mui/icons-material/Cancel';
 import NoPersonImage from '../assets/no_person.svg'
 
 import { useSelector, useDispatch } from 'react-redux'
@@ -24,17 +26,7 @@ const MyRequestsPage = () => {
 
     const db = getFirestore(app);
 
-    const fetchRequestsUsers = async () => {
-        let newArr = []
-        setRequestsUsers([])
-        if (requests && requests.length !== 0) {
-            for (let request of requests) {
-                const user = await fetchInfoAboutUser(request)
-                newArr.push(user)
-            }
-            setRequestsUsers(newArr)
-        }
-    }
+
 
     const acceptFriend = async (acceptedId) => {
         const currentRef = doc(db, "users", currentUser.id);
@@ -49,7 +41,6 @@ const MyRequestsPage = () => {
         });
         dispatch(deleteRequest(acceptedId))
         dispatch(addFriend(acceptedId))
-        console.log(requestsUsers, requests, currentUser, "shitadd")
         let newArr = requestsUsers.filter((requestsUser) => requestsUser.id !== acceptedId)
         setRequestsUsers(newArr)
 
@@ -65,14 +56,24 @@ const MyRequestsPage = () => {
             sentRequests: arrayRemove(currentUser.id)
         });
         dispatch(deleteRequest(acceptedId))
-        console.log(requests, currentUser, "shitdel")
         let newArr = requestsUsers.filter((requestsUser) => requestsUser.id !== acceptedId)
         setRequestsUsers(newArr)
     }
 
     useEffect(() => {
+        const fetchRequestsUsers = async () => {
+            let newArr = []
+            setRequestsUsers([])
+            if (requests && requests.length !== 0) {
+                for (let request of requests) {
+                    const user = await fetchInfoAboutUser(request)
+                    newArr.push(user)
+                }
+                setRequestsUsers(newArr)
+            }
+        }
         fetchRequestsUsers()
-    }, [])
+    }, [requests])
 
     return (
         <Box sx={{ textAlign: "center", p: 2 }}>
@@ -86,15 +87,17 @@ const MyRequestsPage = () => {
                                     <Avatar alt={user.name} src={user.photoURL ? user.photoURL : NoPersonImage} sx={{ width: 64, height: 64, mx: "auto" }}></Avatar>
                                     <Typography>{user.name}</Typography>
                                 </Link>
-                                <Button sx={{ mx: 2 }} variant="contained" color="success" onClick={() => acceptFriend(user.id)}>Accept</Button>
-                                <Button sx={{ mx: 2 }} variant="contained" color="error" onClick={() => rejectFriend(user.id)}>Decline</Button>
+                                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                                    <Button color="success" sx={{ mx: 2, display: "flex" }} variant="contained" onClick={() => acceptFriend(user.id)}><CheckIcon sx={{ pr: 1 }}></CheckIcon></Button>
+                                    <Button color="error" sx={{ mx: 2, display: "flex" }} variant="contained" onClick={() => rejectFriend(user.id)}><CancelIcon sx={{ pr: 1 }}></CancelIcon></Button>
+                                </Box>
                             </Card>
                         ))}
                     </Box>
                 </Box>
                 : <Typography variant="h4" sx={{ p: 2 }}>No requests found! Try adding new friends yourself!</Typography>
             }
-        </Box>
+        </Box >
     )
 }
 

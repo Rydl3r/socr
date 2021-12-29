@@ -5,6 +5,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import LoginIcon from '@mui/icons-material/Login';
+import GoogleIcon from '@mui/icons-material/Google';
 
 import { app } from '../firebase'
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
@@ -43,7 +45,7 @@ const SignInPage = () => {
                     <TextField required value={email} onChange={(e) => setEmail(e.target.value)} id="outlined-basic" label="Email" type="email" variant="outlined" sx={{ my: 1, mx: "auto" }} />
                     <TextField required value={password} onChange={(e) => setPassword(e.target.value)} id="outlined-basic" label="Password" type="password" variant="outlined" sx={{ my: 1, mx: "auto" }} />
                 </Box>
-                <Button variant="contained" color="primary" sx={{ my: 1, display: "block", mx: "auto" }} onClick={() => {
+                <Button variant="contained" color="primary" sx={{ my: 1, mx: "auto", display: "flex" }} onClick={() => {
                     if (password === "" || email === "") {
                         alert('Please, input correct data')
                     } else if (!validateEmail(email)) {
@@ -61,17 +63,14 @@ const SignInPage = () => {
                                 })
                             })
                             .catch((error) => {
-                                const errorCode = error.code;
-                                const errorMessage = error.message;
+                                console.log(error)
                             });
                     }
 
-                }}>Sign in</Button>
-                <Button variant="contained" color="success" sx={{ my: 1, display: "block", mx: "auto" }} onClick={() => {
+                }}><LoginIcon sx={{ pr: 1 }}></LoginIcon>Sign in</Button>
+                <Button variant="contained" color="success" sx={{ my: 1, mx: "auto", display: "flex" }} onClick={() => {
                     signInWithPopup(auth, provider)
                         .then((result) => {
-                            const credential = GoogleAuthProvider.credentialFromResult(result);
-                            const token = credential.accessToken;
                             const user = result.user;
                             const isNewUser = user.metadata.creationTime === user.metadata.lastSignInTime
 
@@ -102,16 +101,9 @@ const SignInPage = () => {
                             }
                             // ...
                         }).catch((error) => {
-                            // Handle Errors here.
-                            const errorCode = error.code;
-                            const errorMessage = error.message;
-                            // The email of the user's account used.
-                            const email = error.email;
-                            // The AuthCredential type that was used.
-                            const credential = GoogleAuthProvider.credentialFromError(error);
-                            // ...
+                            console.log(error)
                         });
-                }}>Sign in with Google</Button>
+                }}><GoogleIcon sx={{ pr: 1 }}></GoogleIcon>Sign in with Google</Button>
             </Container>
         </div>
     )

@@ -16,12 +16,20 @@ export const postsSlice = createSlice({
             state.value = action.payload
         },
         addPost: (state, action) => {
-            console.log("adding")
             state.value.push(action.payload)
+        },
+        deletePost: (state, action) => {
+            let newArr = state.value.filter((post) => post.id !== action.payload)
+            state.value = newArr
         },
         addLike: (state, action) => {
             let neededIndex = state.value.findIndex((post) => post.id === action.payload.postId)
             state.value[neededIndex].likes.push(action.payload.likeAuthor)
+        },
+        removeLike: (state, action) => {
+            let neededIndex = state.value.findIndex((post) => post.id === action.payload.postId)
+            let newArr = state.value[neededIndex].likes.filter((author) => author !== action.payload.likeAuthor)
+            state.value[neededIndex].likes = newArr
         },
         addComment: (state, action) => {
             let neededIndex = state.value.findIndex((post) => post.id === action.payload.postId)
@@ -32,6 +40,6 @@ export const postsSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { setPosts, addPost, addLike, addComment } = postsSlice.actions
+export const { setPosts, addPost, deletePost, addLike, removeLike, addComment } = postsSlice.actions
 
 export default postsSlice.reducer

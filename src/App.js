@@ -16,6 +16,7 @@ import { store } from './store'
 import { Provider } from 'react-redux'
 import MyProfilePage from './components/MyProfilePage';
 import MyRequestsPage from './components/MyRequestsPage';
+import AddPostPage from './components/AddPostPage';
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
             <Route path="/requests" element={<FriendsRequestPage />} />
             <Route path="/myprofile" element={<MyProfilePage />} />
             <Route path="/myrequests" element={<MyRequestsPage />} />
+            <Route path="/addpost" element={<AddPostPage />} />
           </Routes >
         </div>
       </Router>

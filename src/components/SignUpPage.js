@@ -5,6 +5,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import LoginIcon from '@mui/icons-material/Login';
+
 
 import { app } from '../firebase'
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
@@ -54,7 +56,7 @@ const SignUpPage = () => {
                         <TextField required value={confirmedPassword} onChange={(e) => setConfirmedPassword(e.target.value)} id="outlined-basic" label="Confirm password" type="password" variant="outlined" sx={{ my: 1, mx: 1 }} />
                     </Box>
                 </Box>
-                <Button variant="contained" color="primary" sx={{ my: 1, display: "block", mx: "auto" }} onClick={() => {
+                <Button variant="contained" color="primary" sx={{ my: 1, display: "flex", mx: "auto" }} onClick={() => {
                     if (password !== confirmedPassword) {
                         alert('Passwords do not match. Try again')
                     } else if (!validateEmail(email)) {
@@ -85,12 +87,10 @@ const SignUpPage = () => {
                                 navigate('/')
                             })
                             .catch((error) => {
-                                const errorCode = error.code;
-                                const errorMessage = error.message;
-                                // ..
+                                console.log(error)
                             });
                     }
-                }}>Sign Up</Button>
+                }}><LoginIcon sx={{ pr: 1 }}></LoginIcon>Sign Up</Button>
             </Container>
         </div >
     )
