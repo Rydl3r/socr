@@ -168,13 +168,13 @@ const Post = (props) => {
                             return (
                                 <Card key={comment.id + comment.publishedAt} variant="outlined" sx={{ display: "flex", alignItems: "center", my: 1, p: 2 }}>
                                     <Avatar onClick={() => navigate('/profile/' + comment.id)} alt={comment.name} src={comment.photoURL ? comment.photoURL : NoPersonImage} sx={{ width: 64, height: 64, mx: 1, cursor: "pointer" }}></Avatar>
-                                    <Box sx={{ mx: 2 }}>
+                                    <Box sx={{ mx: { sx: 0, md: 2 } }}>
                                         <Typography variant="h6" >{comment.name}</Typography>
                                         <Typography>{comment.publishedAt}</Typography>
                                     </Box>
                                     <Typography>{comment.content}</Typography>
                                     {comment.id === currentUserInfo.id
-                                        ? <Button variant="outlined" color="error" sx={{ display: "flex", ml: "auto", my: 2 }} onClick={() => deleteComment(comment)}><CancelIcon sx={{ pr: 1 }}></CancelIcon>Delete Comment</Button>
+                                        ? <Button variant="outlined" color="error" sx={{ display: "flex", ml: "auto", my: 2 }} onClick={() => deleteComment(comment)}><CancelIcon sx={{ display: { xs: 'none', md: 'block' }, pr: 1 }}></CancelIcon>Delete Comment</Button>
                                         : ""}
 
                                 </Card>
