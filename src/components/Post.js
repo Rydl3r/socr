@@ -173,7 +173,7 @@ const Post = (props) => {
                                         <Typography>{comment.publishedAt}</Typography>
                                     </Box>
                                     <Typography>{comment.content}</Typography>
-                                    {comment.id === currentUserInfo
+                                    {comment.id === currentUserInfo.id
                                         ? <Button variant="outlined" color="error" sx={{ display: "flex", ml: "auto", my: 2 }} onClick={() => deleteComment(comment)}><CancelIcon sx={{ pr: 1 }}></CancelIcon>Delete Comment</Button>
                                         : ""}
 
