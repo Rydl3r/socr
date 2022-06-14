@@ -1,22 +1,16 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+import Navbar from "./components/Navbar";
+import HeroPage from "./components/HeroPage";
+import SignInPage from "./components/SignInPage";
+import SignUpPage from "./components/SignUpPage";
+import ProfilePage from "./components/ProfilePage";
 
-import Navbar from './components/Navbar'
-import HeroPage from './components/HeroPage';
-import SignInPage from './components/SignInPage';
-import SignUpPage from './components/SignUpPage';
-import ProfilePage from './components/ProfilePage';
-
-import { store } from './store'
-import { Provider } from 'react-redux'
-import MyProfilePage from './components/MyProfilePage';
-import MyRequestsPage from './components/MyRequestsPage';
-import AddPostPage from './components/AddPostPage';
-
+import { store } from "./store";
+import { Provider } from "react-redux";
+import MyProfilePage from "./components/MyProfilePage";
+import MyRequestsPage from "./components/MyRequestsPage";
+import AddPostPage from "./components/AddPostPage";
 
 function App() {
   return (
@@ -24,7 +18,7 @@ function App() {
       <Router>
         <div className="App">
           <Navbar />
-          <Routes >
+          <Routes>
             <Route path="/" element={<HeroPage />} />
             <Route path="/signin" element={<SignInPage />} />
             <Route path="/signup" element={<SignUpPage />} />
@@ -32,7 +26,7 @@ function App() {
             <Route path="/myprofile" element={<MyProfilePage />} />
             <Route path="/myrequests" element={<MyRequestsPage />} />
             <Route path="/addpost" element={<AddPostPage />} />
-          </Routes >
+          </Routes>
         </div>
       </Router>
     </Provider>
