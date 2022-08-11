@@ -35,11 +35,7 @@ const ProfilePage = () => {
   const currentUserInfo = useSelector((state) => state.userInfo.value);
 
   const sendRequest = async () => {
-    if (
-      currentUserInfo &&
-      currentUserInfo.id &&
-      currentUserInfo.id.length > 0
-    ) {
+    if (currentUserInfo && currentUserInfo.id && currentUserInfo.id.length) {
       const sendToDocRef = doc(db, "users", id);
       await updateDoc(sendToDocRef, {
         requests: arrayUnion(currentUserInfo.id),
@@ -55,11 +51,7 @@ const ProfilePage = () => {
   };
 
   const undoRequest = async () => {
-    if (
-      currentUserInfo &&
-      currentUserInfo.id &&
-      currentUserInfo.id.length > 0
-    ) {
+    if (currentUserInfo && currentUserInfo.id && currentUserInfo.id.length) {
       const sendToDocRef = doc(db, "users", id);
       await updateDoc(sendToDocRef, {
         requests: arrayRemove(currentUserInfo.id),

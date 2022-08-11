@@ -22,7 +22,7 @@ const AddPostPage = () => {
 
   const addPost = async () => {
     if (isLogged) {
-      if (title !== "" && content !== "") {
+      if (title && content) {
         let newPost = {
           author: currentUser.id,
           imageURL: image ? image : null,

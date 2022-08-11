@@ -50,7 +50,7 @@ const HeroPage = () => {
   }, [db, dispatch]);
   return (
     <Box>
-      {posts && posts.length > 0 ? (
+      {posts && posts.length ? (
         <Typography variant="h4" sx={{ p: 2, textAlign: "center" }}>
           Check out the latest posts!
         </Typography>
